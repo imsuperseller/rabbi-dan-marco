@@ -297,9 +297,7 @@
             {/* Image section — face fully visible */}
             <div style={{
               position: "relative", width: "100%",
-              height: mob ? "60vh" : "auto",
-              aspectRatio: mob ? undefined : "2.24 / 1",
-              maxHeight: mob ? undefined : "60vh",
+              height: mob ? "60vh" : "55vh",
               overflow: "hidden",
             }}>
               <div style={{
@@ -308,9 +306,8 @@
               }}>
                 <img src={mob ? "danmarco.jpg" : "hero-crop.jpg"} alt="Rabbi Dan Marco"
                   style={{
-                    display: "block", width: "100%", height: mob ? "100%" : "auto",
-                    objectFit: mob ? "cover" : undefined,
-                    objectPosition: mob ? "center 15%" : undefined,
+                    display: "block", width: "100%", height: "100%",
+                    objectFit: "cover", objectPosition: "center center",
                   }}
                 />
               </div>
