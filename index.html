@@ -1,484 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Dan Marco Method — 7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses. Now in plain language." />
   <title>The Dan Marco Method — Rabbi Dan Marco</title>
-  <meta name="description" content="7 Ashkenazi financial principles that have survived 3,000 years of wars, exiles, and collapses. Now in plain language. $9.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --bg: #0F0D0B;
-      --bg-alt: #1A1612;
-      --copper: #C87941;
-      --copper-light: #E8A86D;
-      --gold: #D4A853;
-      --cream: #F0EBE3;
-      --muted: #9E9385;
-      --white: #FAF9F7;
-      --serif: 'Cormorant Garamond', Georgia, serif;
-      --sans: 'Inter', -apple-system, sans-serif;
-    }
-    html { scroll-behavior: smooth; }
-    body { background: var(--bg); color: var(--cream); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-
-    /* ── HERO — image at natural size, text overlaid at bottom ── */
-    .hero {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: relative;
-      width: 100%;
-    }
-    .hero-bg img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-    .hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(15,13,11,0) 35%,
-        rgba(15,13,11,0.5) 60%,
-        rgba(15,13,11,0.9) 80%,
-        rgba(15,13,11,1) 100%
-      );
-    }
-    .hero-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 1;
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 0 24px 40px;
-      text-align: center;
-    }
-    .hero-eyebrow {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--copper);
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    .hero h1 {
-      font-family: var(--serif);
-      font-size: clamp(30px, 7vw, 52px);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--white);
-      margin-bottom: 16px;
-    }
-    .hero-sub {
-      font-size: 17px;
-      color: var(--muted);
-      line-height: 1.5;
-      margin-bottom: 28px;
-    }
-    .hero-sub strong { color: var(--cream); }
-
-    /* ── CTA ── */
-    .cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 40px;
-      background: var(--copper);
-      color: var(--bg);
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-decoration: none;
-      border-radius: 6px;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .cta:hover { background: var(--copper-light); transform: translateY(-1px); }
-    .cta-block {
-      display: block;
-      width: 100%;
-      max-width: 480px;
-      margin: 0 auto;
-      text-align: center;
-      padding: 18px 32px;
-    }
-    .cta-note {
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-    .price-row {
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .price-was { font-size: 18px; color: var(--muted); text-decoration: line-through; opacity: 0.5; }
-    .price-now { font-size: 42px; font-weight: 700; color: var(--white); }
-
-    /* ── CONTAINER ── */
-    .wrap { max-width: 640px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── PROBLEM SECTION ── */
-    .problem {
-      padding: 80px 0 64px;
-    }
-    .problem h2 {
-      font-family: var(--serif);
-      font-size: clamp(26px, 5vw, 36px);
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.2;
-      margin-bottom: 24px;
-    }
-    .problem p {
-      font-size: 16px;
-      line-height: 1.75;
-      color: var(--muted);
-      margin-bottom: 18px;
-    }
-    .problem p strong { color: var(--cream); }
-    .problem p em { color: var(--copper-light); font-style: normal; }
-
-    /* ── MECHANISM ── */
-    .mechanism {
-      padding: 64px 0;
-      background: var(--bg-alt);
-    }
-    .mechanism h2 {
-      font-family: var(--serif);
-      font-size: clamp(26px, 5vw, 36px);
-      font-weight: 700;
-      color: var(--white);
-      text-align: center;
-      margin-bottom: 8px;
-    }
-    .mechanism .sub {
-      text-align: center;
-      font-size: 15px;
-      color: var(--muted);
-      margin-bottom: 40px;
-    }
-    .principle-list { list-style: none; }
-    .principle-list li {
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(200,121,65,0.08);
-      font-size: 16px;
-      line-height: 1.5;
-      color: var(--muted);
-    }
-    .principle-list li:first-child { border-top: 1px solid rgba(200,121,65,0.08); }
-    .principle-list li strong { color: var(--cream); }
-    .principle-list li .num {
-      color: var(--copper);
-      font-weight: 700;
-      font-size: 13px;
-      margin-right: 10px;
-    }
-    .mechanism-note {
-      text-align: center;
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 15px;
-      color: var(--copper);
-      margin-top: 24px;
-    }
-
-    /* ── QUOTE ── */
-    .quote-section {
-      padding: 72px 0;
-    }
-    .quote-section blockquote {
-      font-family: var(--serif);
-      font-size: clamp(20px, 4vw, 30px);
-      font-weight: 600;
-      line-height: 1.35;
-      color: var(--white);
-      text-align: center;
-      max-width: 600px;
-      margin: 0 auto 14px;
-    }
-    .quote-section cite {
-      display: block;
-      text-align: center;
-      font-style: normal;
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: var(--copper);
-      text-transform: uppercase;
-    }
-
-    /* ── CLOSE ── */
-    .close-section {
-      padding: 64px 0 80px;
-      background: var(--bg-alt);
-    }
-    .close-section h2 {
-      font-family: var(--serif);
-      font-size: clamp(26px, 5vw, 36px);
-      font-weight: 700;
-      color: var(--white);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .close-section .nudge {
-      text-align: center;
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 480px;
-      margin: 0 auto 24px;
-    }
-    .close-section .nudge-em {
-      text-align: center;
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 17px;
-      color: var(--copper-light);
-      margin-bottom: 32px;
-    }
-    .trust-row {
-      display: flex;
-      justify-content: center;
-      gap: 28px;
-      flex-wrap: wrap;
-      margin: 28px 0 0;
-    }
-    .trust-item {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .trust-item span { display: block; font-size: 16px; margin-bottom: 4px; }
-
-    /* ── FAQ ── */
-    .faq { padding: 64px 0; }
-    .faq h3 {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--copper);
-      text-align: center;
-      margin-bottom: 28px;
-      font-weight: 600;
-    }
-    .faq-item {
-      border-bottom: 1px solid rgba(200,121,65,0.1);
-      padding: 18px 0;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    .faq-item:first-of-type { border-top: 1px solid rgba(200,121,65,0.1); }
-    .faq-q { font-weight: 600; color: var(--cream); font-size: 15px; margin-bottom: 6px; }
-    .faq-a { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 32px 0;
-      border-top: 1px solid rgba(200,121,65,0.08);
-      text-align: center;
-    }
-    footer p { font-size: 11px; color: var(--muted); opacity: 0.5; line-height: 1.6; max-width: 500px; margin: 0 auto 8px; }
-    footer a { color: var(--copper); text-decoration: none; }
-
-    /* ── STICKY ── */
-    .sticky {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(15,13,11,0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(200,121,65,0.15);
-      padding: 10px 20px;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-    .sticky.show { transform: translateY(0); }
-    .sticky .s-price { font-size: 13px; color: var(--muted); }
-    .sticky .s-price strong { color: var(--white); font-size: 18px; }
-    .sticky .s-btn {
-      padding: 10px 24px;
-      background: var(--copper);
-      color: var(--bg);
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.2s;
-    }
-    .sticky .s-btn:hover { background: var(--copper-light); }
-
-    /* ── MOBILE ── */
-    @media (max-width: 600px) {
-      .hero-content { padding-bottom: 32px; }
-      .cta { padding: 14px 28px; font-size: 15px; }
-      .cta-block { padding: 16px 24px; }
-      .trust-row { gap: 16px; }
-      .sticky { padding: 8px 14px; }
-      .sticky .s-btn { padding: 8px 18px; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0F0D0B;
     }
   </style>
 </head>
 <body>
+  <div id="root"></div>
 
-  <!-- HERO — full viewport, image bleeds edge to edge -->
-  <section class="hero">
-    <div class="hero-bg">
-      <img src="dan-marco.jpg" alt="Rabbi Dan Marco" loading="eager">
-    </div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">Rabbi Dan Marco &nbsp;·&nbsp; Alpindorf, Austria</div>
-      <h1>The Dan Marco Method</h1>
-      <p class="hero-sub">7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses. <strong>Now in plain language.</strong></p>
-      <div class="price-row">
-        <span class="price-was">$47</span>
-        <span class="price-now">$9</span>
-      </div>
-      <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta">Get The Method — $9</a>
-      <p class="cta-note">Instant PDF. 10 pages. Yours forever.</p>
-    </div>
-  </section>
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
 
-  <!-- PROBLEM — why this matters -->
-  <section class="problem">
-    <div class="wrap">
-      <h2>You were never taught<br>how money actually works.</h2>
-      <p>School taught you to get a job. Your parents taught you to save. Neither taught you why the gap between effort and result keeps growing.</p>
-      <p><strong>That gap is not bad luck. It is a missing framework.</strong></p>
-      <p>For 3,000 years, one community survived every collapse, every war, every exile — and rebuilt each time. Not through connections or conspiracy. Through <em>a system</em> — passed from parent to child, generation after generation, across continents and centuries.</p>
-      <p>The Dan Marco Method extracts the 7 core financial principles from that system — sourced directly from the Talmud, Maimonides, and real rabbinic scholarship — and puts them in language anyone can use.</p>
-      <p><strong>No motivational fluff. No generic advice. Real principles, real sources, real application.</strong></p>
-    </div>
-  </section>
+    /* ── tiny hook: fires once when element enters viewport ── */
+    function useInView(opts = {}) {
+      const ref = useRef(null);
+      const [visible, setVisible] = useState(false);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const io = new IntersectionObserver(
+          ([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } },
+          { threshold: opts.threshold ?? 0.15 }
+        );
+        io.observe(el);
+        return () => io.disconnect();
+      }, []);
+      return [ref, visible];
+    }
 
-  <!-- MECHANISM — what's inside -->
-  <section class="mechanism">
-    <div class="wrap">
-      <h2>What's Inside</h2>
-      <p class="sub">7 principles. 10 pages. Read in 20 minutes.</p>
+    /* ── animated counter ── */
+    function AnimCount({ target, duration = 1200 }) {
+      const [val, setVal] = useState(0);
+      const [ref, vis] = useInView();
+      useEffect(() => {
+        if (!vis) return;
+        let start = null;
+        const step = (ts) => {
+          if (!start) start = ts;
+          const p = Math.min((ts - start) / duration, 1);
+          setVal(Math.floor(p * target));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }, [vis]);
+      return <span ref={ref}>{val}</span>;
+    }
 
-      <ul class="principle-list">
-        <li><span class="num">01</span> <strong>The Three-Part Rule</strong> — the Talmudic asset allocation framework the Nobel Prize rediscovered in 1952</li>
-        <li><span class="num">02</span> <strong>Tzedakah Is Justice, Not Charity</strong> — why the mistranslation costs people a fortune</li>
-        <li><span class="num">03</span> <strong>Build Before You Protect</strong> — what Israeli culture gets right that Western caution gets wrong</li>
-        <li><span class="num">04</span> <strong>Land Does Not Burn</strong> — the lesson one family brought from Europe in 1939</li>
-        <li><span class="num">05</span> <strong>The Shabbat Principle</strong> — deliberate rest as a performance protocol, not a limitation</li>
-        <li><span class="num">06</span> <strong>The Negotiation Framework</strong> — what the Talmud says about knowing your worth before you open your mouth</li>
-        <li><span class="num">07</span> <strong>Generational Wealth Transfer</strong> — how to build wealth your grandchildren still inherit</li>
-      </ul>
+    /* ── floating particles background ── */
+    function Particles() {
+      const dots = Array.from({ length: 30 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        s: Math.random() * 2 + 1,
+        d: Math.random() * 20 + 10,
+        del: Math.random() * 5,
+      }));
+      return (
+        <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
+          {dots.map((d) => (
+            <div key={d.id} style={{
+              position: "absolute", left: `${d.x}%`, top: `${d.y}%`,
+              width: d.s, height: d.s, borderRadius: "50%",
+              background: "rgba(200,121,65,0.25)",
+              animation: `floatUp ${d.d}s ${d.del}s linear infinite`,
+            }} />
+          ))}
+          <style>{`@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0.3}50%{opacity:0.6}100%{transform:translateY(-120vh) scale(0.3);opacity:0}}`}</style>
+        </div>
+      );
+    }
 
-      <p class="mechanism-note">Each principle includes its original source and a practical application for today.</p>
+    /* ── section wrapper with scroll animation ── */
+    function Section({ children, className = "", delay = 0, style = {} }) {
+      const [ref, vis] = useInView({ threshold: 0.08 });
+      return (
+        <div
+          ref={ref}
+          className={className}
+          style={{
+            ...style,
+            opacity: vis ? 1 : 0,
+            transform: vis ? "translateY(0)" : "translateY(48px)",
+            transition: `opacity 0.8s ${delay}s cubic-bezier(.16,1,.3,1), transform 0.8s ${delay}s cubic-bezier(.16,1,.3,1)`,
+          }}
+        >
+          {children}
+        </div>
+      );
+    }
 
-      <div style="margin-top: 36px; text-align: center;">
-        <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta cta-block">Get The Method — $9</a>
-        <p class="cta-note">30-day money-back guarantee. No questions asked.</p>
-      </div>
-    </div>
-  </section>
+    /* ── glassmorphism card ── */
+    function GlassCard({ children, className = "", style = {} }) {
+      return (
+        <div
+          className={className}
+          style={{
+            background: "rgba(26,22,18,0.55)",
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+            border: "1px solid rgba(200,121,65,0.12)",
+            borderRadius: 16,
+            ...style,
+          }}
+        >
+          {children}
+        </div>
+      );
+    }
 
-  <!-- QUOTE -->
-  <section class="quote-section">
-    <div class="wrap">
-      <blockquote>"For 3,000 years, one community survived every war, every collapse, every exile — and always rebuilt. This is not luck. This is a system."</blockquote>
-      <cite>— Rabbi Dan Marco</cite>
-    </div>
-  </section>
+    /* ── principle card ── */
+    function PrincipleCard({ num, title, desc, delay }) {
+      const [ref, vis] = useInView();
+      const [hover, setHover] = useState(false);
+      return (
+        <div
+          ref={ref}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{
+            background: hover ? "rgba(200,121,65,0.08)" : "rgba(26,22,18,0.45)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            border: hover ? "1px solid rgba(200,121,65,0.25)" : "1px solid rgba(200,121,65,0.08)",
+            borderRadius: 14,
+            padding: "28px 24px",
+            opacity: vis ? 1 : 0,
+            transform: vis ? "translateY(0) scale(1)" : "translateY(32px) scale(0.96)",
+            transition: `all 0.7s ${delay}s cubic-bezier(.16,1,.3,1), background 0.3s, border 0.3s`,
+            cursor: "default",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+            <div style={{
+              minWidth: 40, height: 40, borderRadius: 10,
+              background: "linear-gradient(135deg, rgba(200,121,65,0.2), rgba(200,121,65,0.05))",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontWeight: 700, fontSize: 14, color: "#C87941",
+              border: "1px solid rgba(200,121,65,0.15)",
+            }}>
+              {num}
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 20, fontWeight: 700, color: "#FAF9F7", marginBottom: 6, lineHeight: 1.2 }}>{title}</div>
+              <div style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.6 }}>{desc}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-  <!-- CLOSE -->
-  <section class="close-section">
-    <div class="wrap">
-      <h2>A Year From Now</h2>
-      <p class="nudge">You either started — or you didn't.<br>This is $9. Less than lunch.</p>
-      <p class="nudge-em">Your children inherit your wealth or your habits.</p>
+    const GUMROAD = "https://rabbidanmarco.gumroad.com/l/method";
 
-      <div class="price-row">
-        <span class="price-was">$47</span>
-        <span class="price-now">$9</span>
-      </div>
+    /* ── CTA button with glow ── */
+    function CTAButton({ children, block = false, style = {} }) {
+      const [hover, setHover] = useState(false);
+      return (
+        <a
+          href={GUMROAD}
+          target="_blank"
+          rel="noopener noreferrer"
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          style={{
+            display: block ? "block" : "inline-flex",
+            alignItems: "center", justifyContent: "center", gap: 10,
+            padding: block ? "18px 32px" : "16px 40px",
+            background: hover ? "#E8A86D" : "linear-gradient(135deg, #C87941, #D4A853)",
+            color: "#0F0D0B", fontWeight: 700, fontSize: 16,
+            textDecoration: "none", borderRadius: 10,
+            transform: hover ? "translateY(-2px)" : "translateY(0)",
+            boxShadow: hover ? "0 12px 40px rgba(200,121,65,0.35)" : "0 4px 20px rgba(200,121,65,0.2)",
+            transition: "all 0.3s cubic-bezier(.16,1,.3,1)",
+            letterSpacing: 0.5, textAlign: "center",
+            maxWidth: block ? 480 : undefined,
+            margin: block ? "0 auto" : undefined,
+            ...style,
+          }}
+        >
+          {children}
+        </a>
+      );
+    }
 
-      <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta cta-block">Get The Method — $9</a>
-      <p class="cta-note">Instant PDF. Yours forever. 30-day refund.</p>
+    /* ════════════════════════════════════════════════
+       MAIN PAGE
+       ════════════════════════════════════════════════ */
+    function LandingPage() {
+      const [scrollY, setScrollY] = useState(0);
+      const [stickyVisible, setStickyVisible] = useState(false);
 
-      <div class="trust-row">
-        <div class="trust-item"><span>&#x1F512;</span>Secure Checkout</div>
-        <div class="trust-item"><span>&#x26A1;</span>Instant Access</div>
-        <div class="trust-item"><span>&#x2714;</span>Yours Forever</div>
-        <div class="trust-item"><span>&#x21A9;</span>30-Day Refund</div>
-      </div>
-    </div>
-  </section>
+      useEffect(() => {
+        const handle = () => {
+          setScrollY(window.scrollY);
+          setStickyVisible(window.scrollY > 600);
+        };
+        window.addEventListener("scroll", handle, { passive: true });
+        return () => window.removeEventListener("scroll", handle);
+      }, []);
 
-  <!-- FAQ -->
-  <section class="faq">
-    <div class="wrap">
-      <h3>Questions</h3>
-      <div class="faq-item">
-        <p class="faq-q">Is this real Jewish wisdom?</p>
-        <p class="faq-a">Yes. Every principle is sourced from real Talmudic tractates, Maimonides, and established rabbinic scholarship. Specific sources are cited throughout.</p>
-      </div>
-      <div class="faq-item">
-        <p class="faq-q">Is this financial advice?</p>
-        <p class="faq-a">No. This is educational content about traditional financial frameworks. Not investment tips, not stock picks. Principles that have worked for 3,000 years.</p>
-      </div>
-      <div class="faq-item">
-        <p class="faq-q">What do I get?</p>
-        <p class="faq-a">A 10-page PDF delivered instantly. Read it in 20 minutes. Keep it forever. Works on any device.</p>
-      </div>
-      <div class="faq-item">
-        <p class="faq-q">What if it's not for me?</p>
-        <p class="faq-a">Full refund within 30 days. No questions asked.</p>
-      </div>
-    </div>
-  </section>
+      const principles = [
+        { num: "01", title: "The Three-Part Rule", desc: "The Talmudic asset allocation framework the Nobel Prize rediscovered in 1952" },
+        { num: "02", title: "Tzedakah Is Justice, Not Charity", desc: "Why the mistranslation costs people a fortune" },
+        { num: "03", title: "Build Before You Protect", desc: "What Israeli culture gets right that Western caution gets wrong" },
+        { num: "04", title: "Land Does Not Burn", desc: "The lesson one family brought from Europe in 1939" },
+        { num: "05", title: "The Shabbat Principle", desc: "Deliberate rest as a performance protocol, not a limitation" },
+        { num: "06", title: "The Negotiation Framework", desc: "What the Talmud says about knowing your worth before you open your mouth" },
+        { num: "07", title: "Generational Wealth Transfer", desc: "How to build wealth your grandchildren still inherit" },
+      ];
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <p>All content is for educational and inspirational purposes only. Not financial, legal, or professional advice.</p>
-      <p>30-day money-back guarantee. &nbsp;|&nbsp; <a href="mailto:info@rabbidanmarco.com">Contact</a></p>
-      <p>© 2026 Rabbi Dan Marco</p>
-    </div>
-  </footer>
+      const faqs = [
+        { q: "Is this real Jewish wisdom?", a: "Yes. Every principle is sourced from real Talmudic tractates, Maimonides, and established rabbinic scholarship. Specific sources are cited throughout." },
+        { q: "Is this financial advice?", a: "No. This is educational content about traditional financial frameworks. Not investment tips, not stock picks. Principles that have worked for 3,000 years." },
+        { q: "What do I get?", a: "A 10-page PDF delivered instantly. Read it in 20 minutes. Keep it forever. Works on any device." },
+        { q: "What if it's not for me?", a: "Full refund within 30 days. No questions asked." },
+      ];
 
-  <!-- STICKY BOTTOM -->
-  <div class="sticky" id="sticky">
-    <div class="s-price"><span style="text-decoration:line-through;opacity:0.4;">$47</span> <strong>$9</strong></div>
-    <a href="https://rabbidanmarco.gumroad.com/l/method" class="s-btn">Get The Method — $9</a>
-  </div>
+      return (
+        <div style={{ background: "#0F0D0B", color: "#F0EBE3", fontFamily: "'Inter',-apple-system,sans-serif", lineHeight: 1.6, WebkitFontSmoothing: "antialiased", minHeight: "100vh", overflow: "hidden" }}>
+          <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <script>
-    const s = document.getElementById('sticky');
-    let t = false;
-    window.addEventListener('scroll', () => {
-      if (!t) {
-        requestAnimationFrame(() => {
-          s.classList.toggle('show', scrollY > 600);
-          t = false;
-        });
-        t = true;
-      }
-    });
+          {/* ── HERO ── */}
+          <div style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+            <Particles />
+
+            {/* parallax image */}
+            <div style={{ position: "relative", width: "100%", transform: `translateY(${scrollY * 0.15}px)` }}>
+              <img
+                src="dan-marco.jpg"
+                alt="Rabbi Dan Marco"
+                style={{ display: "block", width: "100%", height: "auto" }}
+              />
+            </div>
+
+            {/* gradient overlay — stronger for text readability */}
+            <div style={{
+              position: "absolute", inset: 0,
+              background: `linear-gradient(to bottom,
+                rgba(15,13,11,0) 20%,
+                rgba(15,13,11,0.3) 40%,
+                rgba(15,13,11,0.7) 60%,
+                rgba(15,13,11,0.95) 80%,
+                rgba(15,13,11,1) 100%
+              )`,
+            }} />
+
+            {/* hero content */}
+            <div style={{
+              position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2,
+              maxWidth: 640, margin: "0 auto", padding: "0 24px 48px", textAlign: "center",
+            }}>
+              <Section>
+                <div style={{
+                  display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+                  color: "#C87941", fontWeight: 600, marginBottom: 14,
+                  padding: "6px 16px", borderRadius: 100,
+                  background: "rgba(200,121,65,0.08)", border: "1px solid rgba(200,121,65,0.15)",
+                }}>
+                  Rabbi Dan Marco · Alpindorf, Austria
+                </div>
+              </Section>
+
+              <Section delay={0.1}>
+                <h1 style={{
+                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
+                  fontSize: "clamp(34px, 8vw, 56px)", lineHeight: 1.05,
+                  color: "#FAF9F7", marginBottom: 18,
+                  background: "linear-gradient(135deg, #FAF9F7, #E8A86D)",
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+                }}>
+                  The Dan Marco Method
+                </h1>
+              </Section>
+
+              <Section delay={0.2}>
+                <p style={{ fontSize: 17, color: "#9E9385", lineHeight: 1.55, marginBottom: 32, maxWidth: 480, margin: "0 auto 32px" }}>
+                  7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses. <span style={{ color: "#F0EBE3" }}>Now in plain language.</span>
+                </p>
+              </Section>
+
+              <Section delay={0.3}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 12, marginBottom: 24 }}>
+                  <span style={{ fontSize: 20, color: "#9E9385", textDecoration: "line-through", opacity: 0.5 }}>$47</span>
+                  <span style={{ fontSize: 48, fontWeight: 700, color: "#FAF9F7" }}>$<AnimCount target={9} duration={800} /></span>
+                </div>
+                <CTAButton>Get The Method — $9</CTAButton>
+                <p style={{ textAlign: "center", fontSize: 13, color: "#9E9385", marginTop: 14 }}>
+                  Instant PDF · 10 pages · Yours forever
+                </p>
+              </Section>
+            </div>
+          </div>
+
+          {/* ── SOCIAL PROOF BAR ── */}
+          <Section style={{ padding: "48px 24px 0", maxWidth: 640, margin: "0 auto" }}>
+            <GlassCard style={{ display: "flex", justifyContent: "center", gap: 40, flexWrap: "wrap", padding: "20px 28px" }}>
+              {[
+                { n: "3,000+", l: "Years Proven" },
+                { n: "10", l: "Pages" },
+                { n: "20", l: "Min Read" },
+                { n: "7", l: "Principles" },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: "center" }}>
+                  <div style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 24, fontWeight: 700, color: "#E8A86D" }}>{s.n}</div>
+                  <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#9E9385" }}>{s.l}</div>
+                </div>
+              ))}
+            </GlassCard>
+          </Section>
+
+          {/* ── PROBLEM ── */}
+          <div style={{ maxWidth: 640, margin: "0 auto", padding: "80px 24px 64px" }}>
+            <Section>
+              <h2 style={{
+                fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
+                fontSize: "clamp(28px, 6vw, 40px)", lineHeight: 1.15, color: "#FAF9F7", marginBottom: 28,
+              }}>
+                You were never taught<br />how money actually works.
+              </h2>
+            </Section>
+            <Section delay={0.1}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
+                School taught you to get a job. Your parents taught you to save. Neither taught you why the gap between effort and result keeps growing.
+              </p>
+            </Section>
+            <Section delay={0.15}>
+              <GlassCard style={{ padding: "24px 28px", marginBottom: 24 }}>
+                <p style={{ fontSize: 17, fontWeight: 600, color: "#F0EBE3", lineHeight: 1.5 }}>
+                  That gap is not bad luck. It is a missing framework.
+                </p>
+              </GlassCard>
+            </Section>
+            <Section delay={0.2}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
+                For 3,000 years, one community survived every collapse, every war, every exile — and rebuilt each time. Not through connections or conspiracy. Through{" "}
+                <span style={{ color: "#E8A86D" }}>a system</span> — passed from parent to child, generation after generation.
+              </p>
+            </Section>
+            <Section delay={0.25}>
+              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
+                The Dan Marco Method extracts the 7 core financial principles from that system — sourced directly from the Talmud, Maimonides, and real rabbinic scholarship — and puts them in language anyone can use.
+              </p>
+            </Section>
+            <Section delay={0.3}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: "#F0EBE3", lineHeight: 1.8 }}>
+                No motivational fluff. No generic advice. Real principles, real sources, real application.
+              </p>
+            </Section>
+          </div>
+
+          {/* ── MECHANISM — What's Inside ── */}
+          <div style={{ background: "rgba(26,22,18,0.6)", position: "relative" }}>
+            <Particles />
+            <div style={{ maxWidth: 640, margin: "0 auto", padding: "72px 24px", position: "relative", zIndex: 1 }}>
+              <Section>
+                <div style={{ textAlign: "center", marginBottom: 10 }}>
+                  <span style={{
+                    display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+                    color: "#C87941", fontWeight: 600, padding: "5px 14px", borderRadius: 100,
+                    background: "rgba(200,121,65,0.06)", border: "1px solid rgba(200,121,65,0.12)",
+                  }}>
+                    Inside the Method
+                  </span>
+                </div>
+              </Section>
+              <Section delay={0.1}>
+                <h2 style={{
+                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
+                  fontSize: "clamp(28px, 6vw, 40px)", color: "#FAF9F7",
+                  textAlign: "center", marginBottom: 8,
+                }}>
+                  What's Inside
+                </h2>
+                <p style={{ textAlign: "center", fontSize: 15, color: "#9E9385", marginBottom: 40 }}>
+                  7 principles · 10 pages · Read in 20 minutes
+                </p>
+              </Section>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {principles.map((p, i) => (
+                  <PrincipleCard key={i} num={p.num} title={p.title} desc={p.desc} delay={i * 0.08} />
+                ))}
+              </div>
+
+              <Section delay={0.3} style={{ marginTop: 20 }}>
+                <p style={{
+                  textAlign: "center", fontFamily: "'Cormorant Garamond',Georgia,serif",
+                  fontStyle: "italic", fontSize: 15, color: "#C87941",
+                }}>
+                  Each principle includes its original source and a practical application for today.
+                </p>
+              </Section>
+
+              <Section delay={0.35}} style={{ marginTop: 36, textAlign: "center" }}>
+                <CTAButton block>Get The Method — $9</CTAButton>
+                <p style={{ textAlign: "center", fontSize: 13, color: "#9E9385", marginTop: 12 }}>
+                  30-day money-back guarantee. No questions asked.
+                </p>
+              </Section>
+            </div>
+          </div>
+
+          {/* ── QUOTE ── */}
+          <div style={{ maxWidth: 640, margin: "0 auto", padding: "80px 24px" }}>
+            <Section>
+              <GlassCard style={{ padding: "40px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+                <div style={{
+                  position: "absolute", top: -20, left: "50%", transform: "translateX(-50)",
+                  fontSize: 120, fontFamily: "'Cormorant Garamond',Georgia,serif",
+                  color: "rgba(200,121,65,0.06)", lineHeight: 1, pointerEvents: "none",
+                }}>"</div>
+                <blockquote style={{
+                  fontFamily: "'Cormorant Garamond',Georgia,serif",
+                  fontSize: "clamp(20px, 4.5vw, 28px)", fontWeight: 600, lineHeight: 1.35,
+                  color: "#FAF9F7", marginBottom: 18, position: "relative", zIndex: 1,
+                }}>
+                  "For 3,000 years, one community survived every war, every collapse, every exile — and always rebuilt. This is not luck. This is a system."
+                </blockquote>
+                <div style={{
+                  fontSize: 12, letterSpacing: 2, color: "#C87941",
+                  textTransform: "uppercase", fontWeight: 600,
+                }}>
+                  — Rabbi Dan Marco
+                </div>
+              </GlassCard>
+            </Section>
+          </div>
+
+          {/* ── CLOSE ── */}
+          <div style={{ background: "rgba(26,22,18,0.6)", position: "relative" }}>
+            <div style={{ maxWidth: 640, margin: "0 auto", padding: "72px 24px 88px", position: "relative", zIndex: 1 }}>
+              <Section>
+                <h2 style={{
+                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
+                  fontSize: "clamp(28px, 6vw, 40px)", color: "#FAF9F7",
+                  textAlign: "center", marginBottom: 18,
+                }}>
+                  A Year From Now
+                </h2>
+              </Section>
+              <Section delay={0.1}>
+                <p style={{ textAlign: "center", fontSize: 17, color: "#9E9385", lineHeight: 1.7, maxWidth: 420, margin: "0 auto 20px" }}>
+                  You either started — or you didn't.<br />This is $9. Less than lunch.
+                </p>
+              </Section>
+              <Section delay={0.15}>
+                <p style={{
+                  textAlign: "center", fontFamily: "'Cormorant Garamond',Georgia,serif",
+                  fontStyle: "italic", fontSize: 19, color: "#E8A86D", marginBottom: 36,
+                }}>
+                  Your children inherit your wealth or your habits.
+                </p>
+              </Section>
+              <Section delay={0.2}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 12, marginBottom: 24 }}>
+                  <span style={{ fontSize: 20, color: "#9E9385", textDecoration: "line-through", opacity: 0.5 }}>$47</span>
+                  <span style={{ fontSize: 48, fontWeight: 700, color: "#FAF9F7" }}>$9</span>
+                </div>
+                <CTAButton block>Get The Method — $9</CTAButton>
+                <p style={{ textAlign: "center", fontSize: 13, color: "#9E9385", marginTop: 12 }}>
+                  Instant PDF · Yours forever · 30-day refund
+                </p>
+              </Section>
+              <Section delay={0.3}} style={{ marginTop: 36 }}>
+                <div style={{ display: "flex", justifyContent: "center", gap: 32, flexWrap: "wrap" }}>
+                  {[
+                    { icon: "🔒", label: "Secure Checkout" },
+                    { icon: "⚡", label: "Instant Access" },
+                    { icon: "✓", label: "Yours Forever" },
+                    { icon: "↩", label: "30-Day Refund" },
+                  ].map((t, i) => (
+                    <div key={i} style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 20, marginBottom: 4 }}>{t.icon}</div>
+                      <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#9E9385" }}>{t.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            </div>
+          </div>
+
+          {/* ── FAQ ── */}
+          <div style={{ maxWidth: 640, margin: "0 auto", padding: "72px 24px" }}>
+            <Section>
+              <div style={{ textAlign: "center", marginBottom: 32 }}>
+                <span style={{
+                  display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+                  color: "#C87941", fontWeight: 600,
+                }}>
+                  Questions
+                </span>
+              </div>
+            </Section>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {faqs.map((f, i) => (
+                <Section key={i} delay={i * 0.08}>
+                  <GlassCard style={{ padding: "22px 24px" }}>
+                    <p style={{ fontWeight: 600, color: "#F0EBE3", fontSize: 15, marginBottom: 8 }}>{f.q}</p>
+                    <p style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.65 }}>{f.a}</p>
+                  </GlassCard>
+                </Section>
+              ))}
+            </div>
+          </div>
+
+          {/* ── FOOTER ── */}
+          <div style={{ borderTop: "1px solid rgba(200,121,65,0.08)", padding: "32px 24px", textAlign: "center" }}>
+            <p style={{ fontSize: 11, color: "#9E9385", opacity: 0.5, lineHeight: 1.6, maxWidth: 500, margin: "0 auto 8px" }}>
+              All content is for educational and inspirational purposes only. Not financial, legal, or professional advice.
+            </p>
+            <p style={{ fontSize: 11, color: "#9E9385", opacity: 0.5, marginBottom: 8 }}>
+              30-day money-back guarantee. | <a href="mailto:info@rabbidanmarco.com" style={{ color: "#C87941", textDecoration: "none" }}>Contact</a>
+            </p>
+            <p style={{ fontSize: 11, color: "#9E9385", opacity: 0.5 }}>© 2026 Rabbi Dan Marco</p>
+          </div>
+
+          {/* ── STICKY BOTTOM BAR ── */}
+          <div style={{
+            position: "fixed", bottom: 0, left: 0, right: 0,
+            background: "rgba(15,13,11,0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+            borderTop: "1px solid rgba(200,121,65,0.12)",
+            padding: "10px 20px", zIndex: 100,
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 16,
+            transform: stickyVisible ? "translateY(0)" : "translateY(100%)",
+            transition: "transform 0.4s cubic-bezier(.16,1,.3,1)",
+          }}>
+            <div style={{ fontSize: 14, color: "#9E9385" }}>
+              <span style={{ textDecoration: "line-through", opacity: 0.4 }}>$47</span>{" "}
+              <strong style={{ color: "#FAF9F7", fontSize: 18 }}>$9</strong>
+            </div>
+            <a href={GUMROAD} target="_blank" rel="noopener noreferrer" style={{
+              padding: "10px 24px", background: "linear-gradient(135deg, #C87941, #D4A853)",
+              color: "#0F0D0B", fontSize: 13, fontWeight: 700, textDecoration: "none",
+              borderRadius: 8, boxShadow: "0 4px 16px rgba(200,121,65,0.25)",
+            }}>
+              Get The Method — $9
+            </a>
+          </div>
+
+          {/* bottom padding for sticky bar */}
+          <div style={{ height: 60 }} />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(LandingPage));
   </script>
-
 </body>
 </html>
