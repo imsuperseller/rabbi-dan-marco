@@ -304,10 +304,10 @@
                 position: "absolute", inset: 0,
                 transform: mob ? "none" : `translateY(${scrollY * 0.12}px)`,
               }}>
-                <img src="danmarco.jpg" alt="Rabbi Dan Marco"
+                <img src={mob ? "danmarco.jpg" : "hero-crop.jpg"} alt="Rabbi Dan Marco"
                   style={{
                     display: "block", width: "100%", height: "100%",
-                    objectFit: "cover", objectPosition: "center top",
+                    objectFit: "cover", objectPosition: mob ? "center 15%" : "center center",
                   }}
                 />
               </div>
