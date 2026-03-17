@@ -12,11 +12,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #0F0D0B;
-    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0F0D0B;overflow-x:hidden}
+    @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:.3}50%{opacity:.6}100%{transform:translateY(-120vh) scale(.3);opacity:0}}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse{0%,100%{opacity:.4}50%{opacity:.8}}
+    @keyframes bookFloat{0%,100%{transform:perspective(800px) rotateY(-8deg) translateY(0)}50%{transform:perspective(800px) rotateY(-8deg) translateY(-10px)}}
+    .gold-line{height:1px;background:linear-gradient(90deg,transparent,rgba(200,121,65,.3),transparent);margin:0 auto}
   </style>
 </head>
 <body>
@@ -26,7 +29,7 @@
     const { useState, useEffect, useRef } = React;
 
     /* ── responsive hook ── */
-    function useIsMobile(bp = 640) {
+    function useIsMobile(bp = 768) {
       const [m, setM] = useState(window.innerWidth <= bp);
       useEffect(() => {
         const h = () => setM(window.innerWidth <= bp);
@@ -36,7 +39,7 @@
       return m;
     }
 
-    /* ── tiny hook: fires once when element enters viewport ── */
+    /* ── fires once when element enters viewport ── */
     function useInView(opts = {}) {
       const ref = useRef(null);
       const [visible, setVisible] = useState(false);
@@ -45,7 +48,7 @@
         if (!el) return;
         const io = new IntersectionObserver(
           ([e]) => { if (e.isIntersecting) { setVisible(true); io.disconnect(); } },
-          { threshold: opts.threshold ?? 0.15 }
+          { threshold: opts.threshold ?? 0.1 }
         );
         io.observe(el);
         return () => io.disconnect();
@@ -71,15 +74,11 @@
       return <span ref={ref}>{val}</span>;
     }
 
-    /* ── floating particles background ── */
-    function Particles() {
-      const dots = Array.from({ length: 30 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        s: Math.random() * 2 + 1,
-        d: Math.random() * 20 + 10,
-        del: Math.random() * 5,
+    /* ── floating particles ── */
+    function Particles({ count = 20 }) {
+      const dots = Array.from({ length: count }, (_, i) => ({
+        id: i, x: Math.random() * 100, y: Math.random() * 100,
+        s: Math.random() * 2 + 1, d: Math.random() * 20 + 10, del: Math.random() * 5,
       }));
       return (
         <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none", zIndex: 0 }}>
@@ -91,118 +90,60 @@
               animation: `floatUp ${d.d}s ${d.del}s linear infinite`,
             }} />
           ))}
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <style>{`@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0.3}50%{opacity:0.6}100%{transform:translateY(-120vh) scale(0.3);opacity:0}}`}</style>
         </div>
       );
     }
 
-    /* ── section wrapper with scroll animation ── */
-    function Section({ children, className = "", delay = 0, style = {} }) {
-      const [ref, vis] = useInView({ threshold: 0.08 });
+    /* ── scroll animation wrapper ── */
+    function Fade({ children, delay = 0, style = {}, threshold = 0.08 }) {
+      const [ref, vis] = useInView({ threshold });
       return (
-        <div
-          ref={ref}
-          className={className}
-          style={{
-            ...style,
-            opacity: vis ? 1 : 0,
-            transform: vis ? "translateY(0)" : "translateY(48px)",
-            transition: `opacity 0.8s ${delay}s cubic-bezier(.16,1,.3,1), transform 0.8s ${delay}s cubic-bezier(.16,1,.3,1)`,
-          }}
-        >
+        <div ref={ref} style={{
+          ...style,
+          opacity: vis ? 1 : 0,
+          transform: vis ? "translateY(0)" : "translateY(40px)",
+          transition: `opacity 0.8s ${delay}s cubic-bezier(.16,1,.3,1), transform 0.8s ${delay}s cubic-bezier(.16,1,.3,1)`,
+        }}>
           {children}
         </div>
       );
     }
 
     /* ── glassmorphism card ── */
-    function GlassCard({ children, className = "", style = {} }) {
+    function GlassCard({ children, style = {} }) {
       return (
-        <div
-          className={className}
-          style={{
-            background: "rgba(26,22,18,0.55)",
-            backdropFilter: "blur(18px)",
-            WebkitBackdropFilter: "blur(18px)",
-            border: "1px solid rgba(200,121,65,0.12)",
-            borderRadius: 16,
-            ...style,
-          }}
-        >
+        <div style={{
+          background: "rgba(26,22,18,0.55)",
+          backdropFilter: "blur(18px)", WebkitBackdropFilter: "blur(18px)",
+          border: "1px solid rgba(200,121,65,0.1)",
+          borderRadius: 16, ...style,
+        }}>
           {children}
-        </div>
-      );
-    }
-
-    /* ── principle card ── */
-    function PrincipleCard({ num, title, desc, delay }) {
-      const [ref, vis] = useInView();
-      const [hover, setHover] = useState(false);
-      return (
-        <div
-          ref={ref}
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
-          style={{
-            background: hover ? "rgba(200,121,65,0.08)" : "rgba(26,22,18,0.45)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
-            border: hover ? "1px solid rgba(200,121,65,0.25)" : "1px solid rgba(200,121,65,0.08)",
-            borderRadius: 14,
-            padding: "28px 24px",
-            opacity: vis ? 1 : 0,
-            transform: vis ? "translateY(0) scale(1)" : "translateY(32px) scale(0.96)",
-            transition: `all 0.7s ${delay}s cubic-bezier(.16,1,.3,1), background 0.3s, border 0.3s`,
-            cursor: "default",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
-            <div style={{
-              minWidth: 40, height: 40, borderRadius: 10,
-              background: "linear-gradient(135deg, rgba(200,121,65,0.2), rgba(200,121,65,0.05))",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontWeight: 700, fontSize: 14, color: "#C87941",
-              border: "1px solid rgba(200,121,65,0.15)",
-            }}>
-              {num}
-            </div>
-            <div>
-              <div style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 20, fontWeight: 700, color: "#FAF9F7", marginBottom: 6, lineHeight: 1.2 }}>{title}</div>
-              <div style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.6 }}>{desc}</div>
-            </div>
-          </div>
         </div>
       );
     }
 
     const GUMROAD = "https://rabbidanmarco.gumroad.com/l/method";
 
-    /* ── CTA button with glow ── */
-    function CTAButton({ children, block = false, style = {} }) {
+    /* ── CTA button ── */
+    function CTAButton({ children, block = false, size = "lg", style = {} }) {
       const [hover, setHover] = useState(false);
+      const isLg = size === "lg";
       return (
-        <a
-          href={GUMROAD}
-          target="_blank"
-          rel="noopener noreferrer"
-          onMouseEnter={() => setHover(true)}
-          onMouseLeave={() => setHover(false)}
+        <a href={GUMROAD} target="_blank" rel="noopener noreferrer"
+          onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
           style={{
             display: block ? "block" : "inline-flex",
             alignItems: "center", justifyContent: "center", gap: 10,
-            padding: block ? "18px 32px" : "16px 40px",
+            padding: isLg ? "18px 48px" : "14px 32px",
             background: hover ? "#E8A86D" : "linear-gradient(135deg, #C87941, #D4A853)",
-            color: "#0F0D0B", fontWeight: 700, fontSize: 16,
-            textDecoration: "none", borderRadius: 10,
+            color: "#0F0D0B", fontWeight: 700, fontSize: isLg ? 17 : 14,
+            textDecoration: "none", borderRadius: 12,
             transform: hover ? "translateY(-2px)" : "translateY(0)",
-            boxShadow: hover ? "0 12px 40px rgba(200,121,65,0.35)" : "0 4px 20px rgba(200,121,65,0.2)",
+            boxShadow: hover ? "0 16px 48px rgba(200,121,65,0.4)" : "0 4px 24px rgba(200,121,65,0.2)",
             transition: "all 0.3s cubic-bezier(.16,1,.3,1)",
             letterSpacing: 0.5, textAlign: "center",
-            maxWidth: block ? 480 : undefined,
-            margin: block ? "0 auto" : undefined,
+            maxWidth: block ? 420 : undefined, margin: block ? "0 auto" : undefined,
             ...style,
           }}
         >
@@ -211,9 +152,107 @@
       );
     }
 
-    /* ════════════════════════════════════════════════
+    /* ── Principle card ── */
+    function PrincipleCard({ num, title, desc, delay }) {
+      const [ref, vis] = useInView();
+      const [hover, setHover] = useState(false);
+      return (
+        <div ref={ref} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+          style={{
+            background: hover ? "rgba(200,121,65,0.06)" : "rgba(26,22,18,0.4)",
+            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            border: hover ? "1px solid rgba(200,121,65,0.2)" : "1px solid rgba(200,121,65,0.06)",
+            borderRadius: 14, padding: "24px 20px",
+            opacity: vis ? 1 : 0,
+            transform: vis ? "translateY(0) scale(1)" : "translateY(28px) scale(0.97)",
+            transition: `all 0.7s ${delay}s cubic-bezier(.16,1,.3,1), background 0.3s, border 0.3s`,
+            cursor: "default",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+            <div style={{
+              minWidth: 38, height: 38, borderRadius: 10,
+              background: "linear-gradient(135deg, rgba(200,121,65,0.18), rgba(200,121,65,0.04))",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontWeight: 700, fontSize: 13, color: "#C87941",
+              border: "1px solid rgba(200,121,65,0.12)",
+            }}>
+              {num}
+            </div>
+            <div>
+              <div style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 19, fontWeight: 700, color: "#FAF9F7", marginBottom: 4, lineHeight: 1.2 }}>{title}</div>
+              <div style={{ fontSize: 13, color: "#9E9385", lineHeight: 1.55 }}>{desc}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ── Book mockup component ── */
+    function BookMockup({ mob }) {
+      return (
+        <div style={{
+          position: "relative",
+          animation: mob ? "none" : "bookFloat 6s ease-in-out infinite",
+          transformStyle: "preserve-3d",
+        }}>
+          {/* Book shadow */}
+          <div style={{
+            position: "absolute", bottom: -20, left: "10%", right: "10%", height: 40,
+            background: "radial-gradient(ellipse, rgba(200,121,65,0.15) 0%, transparent 70%)",
+            filter: "blur(10px)",
+          }} />
+          {/* Book body */}
+          <div style={{
+            width: mob ? 180 : 240, height: mob ? 260 : 340,
+            background: "linear-gradient(145deg, #1A1612 0%, #0F0D0B 100%)",
+            borderRadius: "4px 16px 16px 4px",
+            border: "1px solid rgba(200,121,65,0.15)",
+            boxShadow: "8px 8px 32px rgba(0,0,0,0.5), -2px 0 8px rgba(200,121,65,0.05)",
+            padding: mob ? "24px 18px" : "32px 24px",
+            display: "flex", flexDirection: "column", justifyContent: "space-between",
+            position: "relative", overflow: "hidden",
+          }}>
+            {/* Spine highlight */}
+            <div style={{
+              position: "absolute", left: 0, top: 0, bottom: 0, width: 4,
+              background: "linear-gradient(to bottom, #C87941, #D4A853)",
+            }} />
+            {/* Decorative corner */}
+            <div style={{
+              position: "absolute", top: 12, right: 12,
+              width: 32, height: 32, borderRadius: "50%",
+              border: "1px solid rgba(200,121,65,0.15)",
+            }} />
+            <div>
+              <div style={{
+                fontSize: mob ? 9 : 10, letterSpacing: 3, textTransform: "uppercase",
+                color: "#C87941", fontWeight: 600, marginBottom: mob ? 12 : 16, marginLeft: 8,
+              }}>
+                Rabbi Dan Marco
+              </div>
+              <div style={{
+                fontFamily: "'Cormorant Garamond',Georgia,serif",
+                fontSize: mob ? 20 : 28, fontWeight: 700, lineHeight: 1.1,
+                color: "#FAF9F7", marginLeft: 8,
+              }}>
+                The Dan<br />Marco<br />Method
+              </div>
+            </div>
+            <div style={{
+              fontSize: mob ? 8 : 9, color: "#9E9385", letterSpacing: 1.5,
+              textTransform: "uppercase", marginLeft: 8,
+            }}>
+              7 Principles · 3,000 Years
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* ════════════════════════════════════════════
        MAIN PAGE
-       ════════════════════════════════════════════════ */
+       ════════════════════════════════════════════ */
     function LandingPage() {
       const mob = useIsMobile();
       const [scrollY, setScrollY] = useState(0);
@@ -245,302 +284,492 @@
         { q: "What if it's not for me?", a: "Full refund within 30 days. No questions asked." },
       ];
 
+      const serif = "'Cormorant Garamond',Georgia,serif";
+      const maxW = 1100;
+
       return (
         <div style={{ background: "#0F0D0B", color: "#F0EBE3", fontFamily: "'Inter',-apple-system,sans-serif", lineHeight: 1.6, WebkitFontSmoothing: "antialiased", minHeight: "100vh", overflow: "hidden" }}>
-          {/* ── HERO ── */}
-          <div style={{ position: "relative", width: "100%", overflow: "hidden", maxHeight: mob ? "92vh" : "none" }}>
-            <Particles />
 
-            {/* parallax image */}
-            <div style={{ position: "relative", width: "100%", height: mob ? "92vh" : "auto", transform: mob ? "none" : `translateY(${scrollY * 0.15}px)` }}>
-              <img
-                src="me.jpg"
-                alt="Rabbi Dan Marco"
-                style={{ display: "block", width: "100%", height: mob ? "100%" : "auto", objectFit: mob ? "cover" : "initial", objectPosition: "center 15%" }}
+          {/* ═══════════ HERO — FULL VIEWPORT ═══════════ */}
+          <div style={{
+            position: "relative", width: "100%", minHeight: "100vh",
+            display: "flex", alignItems: "flex-end", overflow: "hidden",
+          }}>
+            <Particles count={25} />
+
+            {/* Background image — fills viewport */}
+            <div style={{
+              position: "absolute", inset: 0,
+              transform: mob ? "none" : `translateY(${scrollY * 0.15}px)`,
+            }}>
+              <img src="me.jpg" alt="Rabbi Dan Marco"
+                style={{
+                  display: "block", width: "100%", height: "100%",
+                  objectFit: "cover", objectPosition: mob ? "center 15%" : "center 20%",
+                }}
               />
             </div>
 
-            {/* gradient overlay — stronger for text readability */}
+            {/* STRONG gradient overlay for text readability */}
             <div style={{
               position: "absolute", inset: 0,
               background: mob
                 ? `linear-gradient(to bottom,
-                    rgba(15,13,11,0) 10%,
-                    rgba(15,13,11,0.2) 30%,
-                    rgba(15,13,11,0.6) 50%,
-                    rgba(15,13,11,0.92) 70%,
-                    rgba(15,13,11,1) 100%
+                    rgba(15,13,11,0) 0%,
+                    rgba(15,13,11,0.1) 20%,
+                    rgba(15,13,11,0.4) 40%,
+                    rgba(15,13,11,0.75) 55%,
+                    rgba(15,13,11,0.95) 70%,
+                    rgba(15,13,11,1) 85%
                   )`
                 : `linear-gradient(to bottom,
-                    rgba(15,13,11,0) 20%,
-                    rgba(15,13,11,0.3) 40%,
+                    rgba(15,13,11,0) 0%,
+                    rgba(15,13,11,0.05) 25%,
+                    rgba(15,13,11,0.35) 45%,
                     rgba(15,13,11,0.7) 60%,
-                    rgba(15,13,11,0.95) 80%,
-                    rgba(15,13,11,1) 100%
+                    rgba(15,13,11,0.92) 75%,
+                    rgba(15,13,11,1) 90%
                   )`,
+              zIndex: 1,
             }} />
 
-            {/* hero content */}
+            {/* Vignette edges */}
             <div style={{
-              position: "absolute", bottom: 0, left: 0, right: 0, zIndex: 2,
-              maxWidth: 640, margin: "0 auto", padding: mob ? "0 20px 24px" : "0 24px 48px", textAlign: "center",
+              position: "absolute", inset: 0, zIndex: 1,
+              boxShadow: "inset 0 0 150px rgba(15,13,11,0.5)",
+              pointerEvents: "none",
+            }} />
+
+            {/* Hero content — bottom of viewport */}
+            <div style={{
+              position: "relative", zIndex: 2, width: "100%",
+              padding: mob ? "0 20px 32px" : "0 48px 64px",
+              maxWidth: mob ? 540 : 700, margin: "0 auto",
+              textAlign: "center",
             }}>
-              <Section>
-                <div style={{
-                  display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
-                  color: "#C87941", fontWeight: 600, marginBottom: 14,
-                  padding: "6px 16px", borderRadius: 100,
-                  background: "rgba(200,121,65,0.08)", border: "1px solid rgba(200,121,65,0.15)",
-                }}>
-                  Rabbi Dan Marco · Alpindorf, Austria
-                </div>
-              </Section>
+              <div style={{
+                display: "inline-block", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
+                color: "#C87941", fontWeight: 600, marginBottom: mob ? 14 : 20,
+                padding: "6px 18px", borderRadius: 100,
+                background: "rgba(200,121,65,0.06)", border: "1px solid rgba(200,121,65,0.12)",
+                animation: "fadeIn 0.8s ease-out both",
+              }}>
+                Rabbi Dan Marco · Alpindorf, Austria
+              </div>
 
-              <Section delay={0.1}>
-                <h1 style={{
-                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
-                  fontSize: "clamp(34px, 8vw, 56px)", lineHeight: 1.05,
-                  color: "#FAF9F7", marginBottom: 18,
-                  background: "linear-gradient(135deg, #FAF9F7, #E8A86D)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                }}>
-                  The Dan Marco Method
-                </h1>
-              </Section>
+              <h1 style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: mob ? "clamp(36px, 10vw, 48px)" : "clamp(48px, 5vw, 68px)",
+                lineHeight: 1.0, marginBottom: mob ? 14 : 20,
+                color: "#FAF9F7",
+                textShadow: "0 2px 40px rgba(0,0,0,0.5)",
+                animation: "fadeIn 0.8s 0.15s ease-out both",
+              }}>
+                <span style={{ background: "linear-gradient(135deg, #FAF9F7 30%, #E8A86D 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  The Dan Marco{mob ? " " : <br />}Method
+                </span>
+              </h1>
 
-              <Section delay={0.2}>
-                <p style={{ fontSize: mob ? 15 : 17, color: "#9E9385", lineHeight: 1.55, marginBottom: mob ? 20 : 32, maxWidth: 480, margin: mob ? "0 auto 20px" : "0 auto 32px" }}>
-                  7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses. <span style={{ color: "#F0EBE3" }}>Now in plain language.</span>
-                </p>
-              </Section>
+              <p style={{
+                fontSize: mob ? 15 : 18, color: "#BDB5AA", lineHeight: 1.55,
+                maxWidth: 500, margin: "0 auto",
+                marginBottom: mob ? 20 : 28,
+                textShadow: "0 1px 16px rgba(0,0,0,0.6)",
+                animation: "fadeIn 0.8s 0.3s ease-out both",
+              }}>
+                7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses.{" "}
+                <span style={{ color: "#FAF9F7", fontWeight: 500 }}>Now in plain language.</span>
+              </p>
 
-              <Section delay={0.3}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, marginBottom: mob ? 16 : 24 }}>
+              <div style={{ animation: "fadeIn 0.8s 0.45s ease-out both" }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, marginBottom: mob ? 16 : 22 }}>
                   <span style={{ fontSize: mob ? 16 : 20, color: "#9E9385", textDecoration: "line-through", opacity: 0.5 }}>$47</span>
-                  <span style={{ fontSize: mob ? 36 : 48, fontWeight: 700, color: "#FAF9F7" }}>$<AnimCount target={9} duration={800} /></span>
+                  <span style={{ fontSize: mob ? 40 : 52, fontWeight: 700, color: "#FAF9F7" }}>$<AnimCount target={9} duration={800} /></span>
                 </div>
                 <CTAButton>Get The Method — $9</CTAButton>
-                <p style={{ textAlign: "center", fontSize: mob ? 12 : 13, color: "#9E9385", marginTop: mob ? 10 : 14 }}>
+                <p style={{ fontSize: mob ? 11 : 13, color: "#9E9385", marginTop: mob ? 10 : 14 }}>
                   Instant PDF · 10 pages · Yours forever
                 </p>
-              </Section>
+              </div>
             </div>
           </div>
 
-          {/* ── SOCIAL PROOF BAR ── */}
-          <Section style={{ padding: mob ? "32px 16px 0" : "48px 24px 0", maxWidth: 640, margin: "0 auto" }}>
-            <GlassCard style={{ display: "flex", justifyContent: "center", gap: mob ? 16 : 40, flexWrap: "wrap", padding: mob ? "16px 12px" : "20px 28px" }}>
+          {/* ═══════════ SOCIAL PROOF BAR ═══════════ */}
+          <div style={{ background: "rgba(26,22,18,0.4)", borderBottom: "1px solid rgba(200,121,65,0.06)" }}>
+            <div style={{
+              maxWidth: maxW, margin: "0 auto",
+              display: "flex", justifyContent: "center", gap: mob ? 24 : 56, flexWrap: "wrap",
+              padding: mob ? "20px 16px" : "28px 32px",
+            }}>
               {[
                 { n: "3,000+", l: "Years Proven" },
                 { n: "10", l: "Pages" },
-                { n: "20", l: "Min Read" },
+                { n: "20 min", l: "Read Time" },
                 { n: "7", l: "Principles" },
               ].map((s, i) => (
-                <div key={i} style={{ textAlign: "center" }}>
-                  <div style={{ fontFamily: "'Cormorant Garamond',Georgia,serif", fontSize: 24, fontWeight: 700, color: "#E8A86D" }}>{s.n}</div>
-                  <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#9E9385" }}>{s.l}</div>
-                </div>
+                <Fade key={i} delay={i * 0.1}>
+                  <div style={{ textAlign: "center" }}>
+                    <div style={{ fontFamily: serif, fontSize: mob ? 22 : 28, fontWeight: 700, color: "#E8A86D" }}>{s.n}</div>
+                    <div style={{ fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "#9E9385" }}>{s.l}</div>
+                  </div>
+                </Fade>
               ))}
-            </GlassCard>
-          </Section>
-
-          {/* ── PROBLEM ── */}
-          <div style={{ maxWidth: 640, margin: "0 auto", padding: mob ? "48px 20px 40px" : "80px 24px 64px" }}>
-            <Section>
-              <h2 style={{
-                fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
-                fontSize: "clamp(28px, 6vw, 40px)", lineHeight: 1.15, color: "#FAF9F7", marginBottom: 28,
-              }}>
-                You were never taught<br />how money actually works.
-              </h2>
-            </Section>
-            <Section delay={0.1}>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
-                School taught you to get a job. Your parents taught you to save. Neither taught you why the gap between effort and result keeps growing.
-              </p>
-            </Section>
-            <Section delay={0.15}>
-              <GlassCard style={{ padding: "24px 28px", marginBottom: 24 }}>
-                <p style={{ fontSize: 17, fontWeight: 600, color: "#F0EBE3", lineHeight: 1.5 }}>
-                  That gap is not bad luck. It is a missing framework.
-                </p>
-              </GlassCard>
-            </Section>
-            <Section delay={0.2}>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
-                For 3,000 years, one community survived every collapse, every war, every exile — and rebuilt each time. Not through connections or conspiracy. Through{" "}
-                <span style={{ color: "#E8A86D" }}>a system</span> — passed from parent to child, generation after generation.
-              </p>
-            </Section>
-            <Section delay={0.25}>
-              <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
-                The Dan Marco Method extracts the 7 core financial principles from that system — sourced directly from the Talmud, Maimonides, and real rabbinic scholarship — and puts them in language anyone can use.
-              </p>
-            </Section>
-            <Section delay={0.3}>
-              <p style={{ fontSize: 16, fontWeight: 600, color: "#F0EBE3", lineHeight: 1.8 }}>
-                No motivational fluff. No generic advice. Real principles, real sources, real application.
-              </p>
-            </Section>
+            </div>
           </div>
 
-          {/* ── MECHANISM — What's Inside ── */}
-          <div style={{ background: "rgba(26,22,18,0.6)", position: "relative" }}>
-            <Particles />
-            <div style={{ maxWidth: 640, margin: "0 auto", padding: mob ? "48px 20px" : "72px 24px", position: "relative", zIndex: 1 }}>
-              <Section>
-                <div style={{ textAlign: "center", marginBottom: 10 }}>
+          {/* ═══════════ PROBLEM SECTION — TWO COLUMN ═══════════ */}
+          <div style={{ maxWidth: maxW, margin: "0 auto", padding: mob ? "56px 20px 48px" : "100px 48px 80px" }}>
+            <div style={{
+              display: mob ? "block" : "flex", gap: 64, alignItems: "center",
+            }}>
+              {/* Left: Text */}
+              <div style={{ flex: 1 }}>
+                <Fade>
+                  <div style={{
+                    fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
+                    color: "#C87941", fontWeight: 600, marginBottom: 14,
+                  }}>
+                    The Problem
+                  </div>
+                </Fade>
+                <Fade delay={0.1}>
+                  <h2 style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: mob ? "clamp(28px, 7vw, 38px)" : 42, lineHeight: 1.1,
+                    color: "#FAF9F7", marginBottom: 24,
+                  }}>
+                    You were never taught how money actually works.
+                  </h2>
+                </Fade>
+                <Fade delay={0.2}>
+                  <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 20 }}>
+                    School taught you to get a job. Your parents taught you to save. Neither taught you why the gap between effort and result keeps growing.
+                  </p>
+                </Fade>
+                <Fade delay={0.25}>
+                  <p style={{ fontSize: 16, lineHeight: 1.8, color: "#9E9385", marginBottom: 0 }}>
+                    For 3,000 years, one community survived every collapse, every war, every exile — and rebuilt each time. Not through connections or conspiracy. Through{" "}
+                    <span style={{ color: "#E8A86D", fontWeight: 500 }}>a system</span> — passed from parent to child, generation after generation.
+                  </p>
+                </Fade>
+              </div>
+
+              {/* Right: Glass card callout */}
+              <div style={{ flex: mob ? undefined : "0 0 360px", marginTop: mob ? 32 : 0 }}>
+                <Fade delay={0.3}>
+                  <GlassCard style={{
+                    padding: mob ? "28px 24px" : "36px 32px",
+                    borderLeft: "3px solid rgba(200,121,65,0.3)",
+                  }}>
+                    <div style={{
+                      fontFamily: serif, fontSize: 48, color: "rgba(200,121,65,0.15)",
+                      lineHeight: 1, marginBottom: -8,
+                    }}>"</div>
+                    <p style={{ fontSize: 18, fontWeight: 600, color: "#F0EBE3", lineHeight: 1.5, marginBottom: 16 }}>
+                      That gap is not bad luck. It is a missing framework.
+                    </p>
+                    <p style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.7 }}>
+                      The Dan Marco Method extracts the 7 core financial principles from that system — sourced directly from the Talmud, Maimonides, and real rabbinic scholarship — and puts them in language anyone can use.
+                    </p>
+                  </GlassCard>
+                </Fade>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Gold divider ── */}
+          <div className="gold-line" style={{ width: "60%", maxWidth: 500 }} />
+
+          {/* ═══════════ WHAT'S INSIDE — WITH BOOK MOCKUP ═══════════ */}
+          <div style={{ background: "rgba(26,22,18,0.5)", position: "relative" }}>
+            <Particles count={15} />
+            <div style={{ maxWidth: maxW, margin: "0 auto", padding: mob ? "56px 20px" : "88px 48px", position: "relative", zIndex: 1 }}>
+              <Fade>
+                <div style={{ textAlign: "center", marginBottom: 12 }}>
                   <span style={{
-                    display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
-                    color: "#C87941", fontWeight: 600, padding: "5px 14px", borderRadius: 100,
-                    background: "rgba(200,121,65,0.06)", border: "1px solid rgba(200,121,65,0.12)",
+                    display: "inline-block", fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
+                    color: "#C87941", fontWeight: 600, padding: "5px 16px", borderRadius: 100,
+                    background: "rgba(200,121,65,0.05)", border: "1px solid rgba(200,121,65,0.1)",
                   }}>
                     Inside the Method
                   </span>
                 </div>
-              </Section>
-              <Section delay={0.1}>
+              </Fade>
+              <Fade delay={0.1}>
                 <h2 style={{
-                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
-                  fontSize: "clamp(28px, 6vw, 40px)", color: "#FAF9F7",
+                  fontFamily: serif, fontWeight: 700,
+                  fontSize: mob ? "clamp(28px, 7vw, 38px)" : 42, color: "#FAF9F7",
                   textAlign: "center", marginBottom: 8,
                 }}>
                   What's Inside
                 </h2>
-                <p style={{ textAlign: "center", fontSize: 15, color: "#9E9385", marginBottom: 40 }}>
+                <p style={{ textAlign: "center", fontSize: 15, color: "#9E9385", marginBottom: mob ? 36 : 48 }}>
                   7 principles · 10 pages · Read in 20 minutes
                 </p>
-              </Section>
+              </Fade>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {principles.map((p, i) => (
-                  <PrincipleCard key={i} num={p.num} title={p.title} desc={p.desc} delay={i * 0.08} />
-                ))}
+              {/* Two-column: book mockup + principles */}
+              <div style={{
+                display: mob ? "block" : "flex", gap: 48, alignItems: "flex-start",
+              }}>
+                {/* Book mockup — left side on desktop */}
+                {!mob && (
+                  <div style={{
+                    flex: "0 0 280px", display: "flex", justifyContent: "center",
+                    position: "sticky", top: 100,
+                  }}>
+                    <Fade delay={0.15}>
+                      <BookMockup mob={mob} />
+                    </Fade>
+                  </div>
+                )}
+
+                {/* Principles list */}
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
+                  {mob && (
+                    <div style={{ display: "flex", justifyContent: "center", marginBottom: 28 }}>
+                      <Fade><BookMockup mob={mob} /></Fade>
+                    </div>
+                  )}
+                  {principles.map((p, i) => (
+                    <PrincipleCard key={i} num={p.num} title={p.title} desc={p.desc} delay={i * 0.06} />
+                  ))}
+                </div>
               </div>
 
-              <Section delay={0.3} style={{ marginTop: 20 }}>
+              <Fade delay={0.3} style={{ marginTop: 28 }}>
                 <p style={{
-                  textAlign: "center", fontFamily: "'Cormorant Garamond',Georgia,serif",
+                  textAlign: "center", fontFamily: serif,
                   fontStyle: "italic", fontSize: 15, color: "#C87941",
                 }}>
                   Each principle includes its original source and a practical application for today.
                 </p>
-              </Section>
+              </Fade>
 
-              <Section delay={0.35} style={{ marginTop: 36, textAlign: "center" }}>
+              <Fade delay={0.35} style={{ marginTop: 36, textAlign: "center" }}>
                 <CTAButton block>Get The Method — $9</CTAButton>
                 <p style={{ textAlign: "center", fontSize: 13, color: "#9E9385", marginTop: 12 }}>
                   30-day money-back guarantee. No questions asked.
                 </p>
-              </Section>
+              </Fade>
             </div>
           </div>
 
-          {/* ── QUOTE ── */}
-          <div style={{ maxWidth: 640, margin: "0 auto", padding: mob ? "48px 20px" : "80px 24px" }}>
-            <Section>
-              <GlassCard style={{ padding: mob ? "28px 20px" : "40px 32px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+          {/* ── Gold divider ── */}
+          <div className="gold-line" style={{ width: "60%", maxWidth: 500 }} />
+
+          {/* ═══════════ QUOTE — WIDE CINEMATIC ═══════════ */}
+          <div style={{ padding: mob ? "56px 20px" : "88px 48px" }}>
+            <Fade>
+              <div style={{
+                maxWidth: 800, margin: "0 auto", textAlign: "center",
+                position: "relative", padding: mob ? "36px 24px" : "56px 48px",
+              }}>
+                {/* decorative lines */}
                 <div style={{
-                  position: "absolute", top: -20, left: "50%", transform: "translateX(-50)",
-                  fontSize: 120, fontFamily: "'Cormorant Garamond',Georgia,serif",
-                  color: "rgba(200,121,65,0.06)", lineHeight: 1, pointerEvents: "none",
+                  position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
+                  width: 60, height: 1, background: "linear-gradient(90deg, transparent, rgba(200,121,65,0.4), transparent)",
+                }} />
+                <div style={{
+                  fontFamily: serif, fontSize: 72, color: "rgba(200,121,65,0.08)",
+                  lineHeight: 1, marginBottom: -24, position: "relative", zIndex: 0,
                 }}>"</div>
                 <blockquote style={{
-                  fontFamily: "'Cormorant Garamond',Georgia,serif",
-                  fontSize: "clamp(20px, 4.5vw, 28px)", fontWeight: 600, lineHeight: 1.35,
-                  color: "#FAF9F7", marginBottom: 18, position: "relative", zIndex: 1,
+                  fontFamily: serif,
+                  fontSize: mob ? "clamp(20px, 5vw, 26px)" : 30,
+                  fontWeight: 600, lineHeight: 1.35,
+                  color: "#FAF9F7", marginBottom: 24, position: "relative", zIndex: 1,
                 }}>
-                  "For 3,000 years, one community survived every war, every collapse, every exile — and always rebuilt. This is not luck. This is a system."
+                  For 3,000 years, one community survived every war, every collapse, every exile — and always rebuilt. This is not luck. This is a system.
                 </blockquote>
                 <div style={{
-                  fontSize: 12, letterSpacing: 2, color: "#C87941",
-                  textTransform: "uppercase", fontWeight: 600,
+                  display: "inline-flex", alignItems: "center", gap: 12,
                 }}>
-                  — Rabbi Dan Marco
+                  <div style={{
+                    width: 32, height: 1,
+                    background: "linear-gradient(90deg, transparent, rgba(200,121,65,0.4))",
+                  }} />
+                  <span style={{
+                    fontSize: 11, letterSpacing: 2.5, color: "#C87941",
+                    textTransform: "uppercase", fontWeight: 600,
+                  }}>
+                    Rabbi Dan Marco
+                  </span>
+                  <div style={{
+                    width: 32, height: 1,
+                    background: "linear-gradient(90deg, rgba(200,121,65,0.4), transparent)",
+                  }} />
                 </div>
-              </GlassCard>
-            </Section>
+              </div>
+            </Fade>
           </div>
 
-          {/* ── CLOSE ── */}
-          <div style={{ background: "rgba(26,22,18,0.6)", position: "relative" }}>
-            <div style={{ maxWidth: 640, margin: "0 auto", padding: mob ? "48px 20px 72px" : "72px 24px 88px", position: "relative", zIndex: 1 }}>
-              <Section>
-                <h2 style={{
-                  fontFamily: "'Cormorant Garamond',Georgia,serif", fontWeight: 700,
-                  fontSize: "clamp(28px, 6vw, 40px)", color: "#FAF9F7",
-                  textAlign: "center", marginBottom: 18,
+          {/* ── Gold divider ── */}
+          <div className="gold-line" style={{ width: "60%", maxWidth: 500 }} />
+
+          {/* ═══════════ WHO IS THIS FOR — THREE COLUMNS ═══════════ */}
+          <div style={{ maxWidth: maxW, margin: "0 auto", padding: mob ? "56px 20px" : "88px 48px" }}>
+            <Fade>
+              <div style={{ textAlign: "center", marginBottom: 12 }}>
+                <span style={{
+                  fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
+                  color: "#C87941", fontWeight: 600,
                 }}>
-                  A Year From Now
-                </h2>
-              </Section>
-              <Section delay={0.1}>
-                <p style={{ textAlign: "center", fontSize: 17, color: "#9E9385", lineHeight: 1.7, maxWidth: 420, margin: "0 auto 20px" }}>
-                  You either started — or you didn't.<br />This is $9. Less than lunch.
-                </p>
-              </Section>
-              <Section delay={0.15}>
-                <p style={{
-                  textAlign: "center", fontFamily: "'Cormorant Garamond',Georgia,serif",
-                  fontStyle: "italic", fontSize: 19, color: "#E8A86D", marginBottom: 36,
-                }}>
-                  Your children inherit your wealth or your habits.
-                </p>
-              </Section>
-              <Section delay={0.2}>
-                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 10, marginBottom: mob ? 16 : 24 }}>
-                  <span style={{ fontSize: 20, color: "#9E9385", textDecoration: "line-through", opacity: 0.5 }}>$47</span>
-                  <span style={{ fontSize: 48, fontWeight: 700, color: "#FAF9F7" }}>$9</span>
-                </div>
-                <CTAButton block>Get The Method — $9</CTAButton>
-                <p style={{ textAlign: "center", fontSize: 13, color: "#9E9385", marginTop: 12 }}>
-                  Instant PDF · Yours forever · 30-day refund
-                </p>
-              </Section>
-              <Section delay={0.3} style={{ marginTop: 36 }}>
-                <div style={{ display: "flex", justifyContent: "center", gap: mob ? 20 : 32, flexWrap: "wrap" }}>
-                  {[
-                    { icon: "🔒", label: "Secure Checkout" },
-                    { icon: "⚡", label: "Instant Access" },
-                    { icon: "✓", label: "Yours Forever" },
-                    { icon: "↩", label: "30-Day Refund" },
-                  ].map((t, i) => (
-                    <div key={i} style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 20, marginBottom: 4 }}>{t.icon}</div>
-                      <div style={{ fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", color: "#9E9385" }}>{t.label}</div>
+                  Who This Is For
+                </span>
+              </div>
+            </Fade>
+            <Fade delay={0.1}>
+              <h2 style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: mob ? "clamp(26px, 7vw, 36px)" : 40, color: "#FAF9F7",
+                textAlign: "center", marginBottom: mob ? 32 : 48,
+              }}>
+                If Any of This Sounds Familiar
+              </h2>
+            </Fade>
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: mob ? "1fr" : "repeat(3, 1fr)",
+              gap: mob ? 14 : 20,
+            }}>
+              {[
+                { icon: "📉", title: "You save but don't grow", desc: "You follow the rules — budget, save, invest in index funds — but the gap between effort and result keeps widening." },
+                { icon: "🔄", title: "You trade time for money", desc: "You know there's a better way but haven't found the framework. Every \"guru\" sells hype. You want substance." },
+                { icon: "🏛️", title: "You want generational wealth", desc: "You're not chasing quick wins. You want principles that last — the kind of wisdom you can pass to your children." },
+              ].map((item, i) => (
+                <Fade key={i} delay={i * 0.12}>
+                  <GlassCard style={{ padding: mob ? "24px 20px" : "32px 28px", height: "100%" }}>
+                    <div style={{ fontSize: 28, marginBottom: 14 }}>{item.icon}</div>
+                    <div style={{
+                      fontFamily: serif, fontSize: 20, fontWeight: 700,
+                      color: "#FAF9F7", marginBottom: 10, lineHeight: 1.2,
+                    }}>
+                      {item.title}
                     </div>
-                  ))}
-                </div>
-              </Section>
+                    <p style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.65 }}>{item.desc}</p>
+                  </GlassCard>
+                </Fade>
+              ))}
             </div>
           </div>
 
-          {/* ── FAQ ── */}
-          <div style={{ maxWidth: 640, margin: "0 auto", padding: mob ? "48px 20px" : "72px 24px" }}>
-            <Section>
-              <div style={{ textAlign: "center", marginBottom: 32 }}>
+          {/* ═══════════ FINAL CTA — SPLIT LAYOUT ═══════════ */}
+          <div style={{ background: "rgba(26,22,18,0.5)", position: "relative" }}>
+            <Particles count={10} />
+            <div style={{
+              maxWidth: maxW, margin: "0 auto",
+              padding: mob ? "56px 20px 72px" : "88px 48px 96px",
+              display: mob ? "block" : "flex", gap: 64, alignItems: "center",
+              position: "relative", zIndex: 1,
+            }}>
+              {/* Left side: emotional close */}
+              <div style={{ flex: 1, marginBottom: mob ? 36 : 0 }}>
+                <Fade>
+                  <h2 style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: mob ? "clamp(28px, 7vw, 38px)" : 44, color: "#FAF9F7",
+                    lineHeight: 1.1, marginBottom: 18,
+                  }}>
+                    A Year From Now
+                  </h2>
+                </Fade>
+                <Fade delay={0.1}>
+                  <p style={{ fontSize: 17, color: "#9E9385", lineHeight: 1.7, marginBottom: 20 }}>
+                    You either started — or you didn't.
+                  </p>
+                </Fade>
+                <Fade delay={0.15}>
+                  <p style={{
+                    fontFamily: serif, fontStyle: "italic",
+                    fontSize: 21, color: "#E8A86D", lineHeight: 1.4, marginBottom: 8,
+                  }}>
+                    Your children inherit your wealth — or your habits.
+                  </p>
+                </Fade>
+              </div>
+
+              {/* Right side: price + CTA card */}
+              <div style={{ flex: mob ? undefined : "0 0 380px" }}>
+                <Fade delay={0.2}>
+                  <GlassCard style={{
+                    padding: mob ? "32px 24px" : "40px 36px",
+                    textAlign: "center",
+                    border: "1px solid rgba(200,121,65,0.15)",
+                  }}>
+                    <div style={{
+                      fontSize: 10, letterSpacing: 3, textTransform: "uppercase",
+                      color: "#C87941", fontWeight: 600, marginBottom: 18,
+                    }}>
+                      Limited Time Price
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "center", gap: 12, marginBottom: 24 }}>
+                      <span style={{ fontSize: 22, color: "#9E9385", textDecoration: "line-through", opacity: 0.5 }}>$47</span>
+                      <span style={{ fontSize: 56, fontWeight: 700, color: "#FAF9F7" }}>$9</span>
+                    </div>
+                    <CTAButton block>Get The Method — $9</CTAButton>
+                    <p style={{ fontSize: 12, color: "#9E9385", marginTop: 16, lineHeight: 1.6 }}>
+                      Instant PDF · Yours forever · 30-day refund
+                    </p>
+
+                    {/* Trust badges */}
+                    <div style={{
+                      display: "flex", justifyContent: "center", gap: mob ? 16 : 24, flexWrap: "wrap",
+                      marginTop: 20, paddingTop: 20,
+                      borderTop: "1px solid rgba(200,121,65,0.08)",
+                    }}>
+                      {[
+                        { icon: "🔒", label: "Secure" },
+                        { icon: "⚡", label: "Instant" },
+                        { icon: "✓", label: "Forever" },
+                        { icon: "↩", label: "Refund" },
+                      ].map((t, i) => (
+                        <div key={i} style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 16, marginBottom: 2 }}>{t.icon}</div>
+                          <div style={{ fontSize: 9, letterSpacing: 1.2, textTransform: "uppercase", color: "#9E9385" }}>{t.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </GlassCard>
+                </Fade>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Gold divider ── */}
+          <div className="gold-line" style={{ width: "60%", maxWidth: 500 }} />
+
+          {/* ═══════════ FAQ — TWO COLUMN GRID ═══════════ */}
+          <div style={{ maxWidth: maxW, margin: "0 auto", padding: mob ? "56px 20px" : "80px 48px" }}>
+            <Fade>
+              <div style={{ textAlign: "center", marginBottom: mob ? 28 : 40 }}>
                 <span style={{
-                  display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+                  fontSize: 10, letterSpacing: 3.5, textTransform: "uppercase",
                   color: "#C87941", fontWeight: 600,
                 }}>
                   Questions
                 </span>
               </div>
-            </Section>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            </Fade>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: mob ? "1fr" : "repeat(2, 1fr)",
+              gap: mob ? 12 : 16,
+            }}>
               {faqs.map((f, i) => (
-                <Section key={i} delay={i * 0.08}>
-                  <GlassCard style={{ padding: "22px 24px" }}>
+                <Fade key={i} delay={i * 0.08}>
+                  <GlassCard style={{ padding: "22px 24px", height: "100%" }}>
                     <p style={{ fontWeight: 600, color: "#F0EBE3", fontSize: 15, marginBottom: 8 }}>{f.q}</p>
                     <p style={{ fontSize: 14, color: "#9E9385", lineHeight: 1.65 }}>{f.a}</p>
                   </GlassCard>
-                </Section>
+                </Fade>
               ))}
             </div>
           </div>
 
-          {/* ── FOOTER ── */}
-          <div style={{ borderTop: "1px solid rgba(200,121,65,0.08)", padding: "32px 24px", textAlign: "center" }}>
+          {/* ═══════════ FOOTER ═══════════ */}
+          <div style={{ borderTop: "1px solid rgba(200,121,65,0.06)", padding: "32px 24px", textAlign: "center" }}>
             <p style={{ fontSize: 11, color: "#9E9385", opacity: 0.5, lineHeight: 1.6, maxWidth: 500, margin: "0 auto 8px" }}>
               All content is for educational and inspirational purposes only. Not financial, legal, or professional advice.
             </p>
@@ -550,11 +779,11 @@
             <p style={{ fontSize: 11, color: "#9E9385", opacity: 0.5 }}>© 2026 Rabbi Dan Marco</p>
           </div>
 
-          {/* ── STICKY BOTTOM BAR ── */}
+          {/* ═══════════ STICKY BOTTOM BAR ═══════════ */}
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0,
             background: "rgba(15,13,11,0.92)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-            borderTop: "1px solid rgba(200,121,65,0.12)",
+            borderTop: "1px solid rgba(200,121,65,0.1)",
             padding: mob ? "8px 16px" : "10px 20px", zIndex: 100,
             display: "flex", alignItems: "center", justifyContent: "center", gap: 16,
             transform: stickyVisible ? "translateY(0)" : "translateY(100%)",
