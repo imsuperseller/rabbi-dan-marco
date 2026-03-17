@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Dan Marco Method — Rabbi Dan Marco</title>
+  <meta name="description" content="7 Ashkenazi financial principles that have survived 3,000 years of wars, exiles, and collapses. Now in plain language. $9.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #0F0D0B;
+      --bg-alt: #1A1612;
+      --copper: #C87941;
+      --copper-light: #E8A86D;
+      --gold: #D4A853;
+      --cream: #F0EBE3;
+      --muted: #9E9385;
+      --white: #FAF9F7;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--cream); font-family: var(--sans); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* ── HERO — image at natural size, text overlaid at bottom ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: relative;
+      width: 100%;
+    }
+    .hero-bg img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(15,13,11,0) 35%,
+        rgba(15,13,11,0.5) 60%,
+        rgba(15,13,11,0.9) 80%,
+        rgba(15,13,11,1) 100%
+      );
+    }
+    .hero-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 24px 40px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--copper);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(30px, 7vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .hero-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+    .hero-sub strong { color: var(--cream); }
+
+    /* ── CTA ── */
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: var(--copper);
+      color: var(--bg);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .cta:hover { background: var(--copper-light); transform: translateY(-1px); }
+    .cta-block {
+      display: block;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 18px 32px;
+    }
+    .cta-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .price-was { font-size: 18px; color: var(--muted); text-decoration: line-through; opacity: 0.5; }
+    .price-now { font-size: 42px; font-weight: 700; color: var(--white); }
+
+    /* ── CONTAINER ── */
+    .wrap { max-width: 640px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── PROBLEM SECTION ── */
+    .problem {
+      padding: 80px 0 64px;
+    }
+    .problem h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 5vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 24px;
+    }
+    .problem p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .problem p strong { color: var(--cream); }
+    .problem p em { color: var(--copper-light); font-style: normal; }
+
+    /* ── MECHANISM ── */
+    .mechanism {
+      padding: 64px 0;
+      background: var(--bg-alt);
+    }
+    .mechanism h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 5vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .mechanism .sub {
+      text-align: center;
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .principle-list { list-style: none; }
+    .principle-list li {
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(200,121,65,0.08);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .principle-list li:first-child { border-top: 1px solid rgba(200,121,65,0.08); }
+    .principle-list li strong { color: var(--cream); }
+    .principle-list li .num {
+      color: var(--copper);
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: 10px;
+    }
+    .mechanism-note {
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--copper);
+      margin-top: 24px;
+    }
+
+    /* ── QUOTE ── */
+    .quote-section {
+      padding: 72px 0;
+    }
+    .quote-section blockquote {
+      font-family: var(--serif);
+      font-size: clamp(20px, 4vw, 30px);
+      font-weight: 600;
+      line-height: 1.35;
+      color: var(--white);
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 14px;
+    }
+    .quote-section cite {
+      display: block;
+      text-align: center;
+      font-style: normal;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--copper);
+      text-transform: uppercase;
+    }
+
+    /* ── CLOSE ── */
+    .close-section {
+      padding: 64px 0 80px;
+      background: var(--bg-alt);
+    }
+    .close-section h2 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 5vw, 36px);
+      font-weight: 700;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .close-section .nudge {
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 480px;
+      margin: 0 auto 24px;
+    }
+    .close-section .nudge-em {
+      text-align: center;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 17px;
+      color: var(--copper-light);
+      margin-bottom: 32px;
+    }
+    .trust-row {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin: 28px 0 0;
+    }
+    .trust-item {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .trust-item span { display: block; font-size: 16px; margin-bottom: 4px; }
+
+    /* ── FAQ ── */
+    .faq { padding: 64px 0; }
+    .faq h3 {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--copper);
+      text-align: center;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(200,121,65,0.1);
+      padding: 18px 0;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .faq-item:first-of-type { border-top: 1px solid rgba(200,121,65,0.1); }
+    .faq-q { font-weight: 600; color: var(--cream); font-size: 15px; margin-bottom: 6px; }
+    .faq-a { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid rgba(200,121,65,0.08);
+      text-align: center;
+    }
+    footer p { font-size: 11px; color: var(--muted); opacity: 0.5; line-height: 1.6; max-width: 500px; margin: 0 auto 8px; }
+    footer a { color: var(--copper); text-decoration: none; }
+
+    /* ── STICKY ── */
+    .sticky {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15,13,11,0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(200,121,65,0.15);
+      padding: 10px 20px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .sticky.show { transform: translateY(0); }
+    .sticky .s-price { font-size: 13px; color: var(--muted); }
+    .sticky .s-price strong { color: var(--white); font-size: 18px; }
+    .sticky .s-btn {
+      padding: 10px 24px;
+      background: var(--copper);
+      color: var(--bg);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background 0.2s;
+    }
+    .sticky .s-btn:hover { background: var(--copper-light); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .hero-content { padding-bottom: 32px; }
+      .cta { padding: 14px 28px; font-size: 15px; }
+      .cta-block { padding: 16px 24px; }
+      .trust-row { gap: 16px; }
+      .sticky { padding: 8px 14px; }
+      .sticky .s-btn { padding: 8px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO — full viewport, image bleeds edge to edge -->
+  <section class="hero">
+    <div class="hero-bg">
+      <img src="dan-marco.jpg" alt="Rabbi Dan Marco" loading="eager">
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Rabbi Dan Marco &nbsp;·&nbsp; Alpindorf, Austria</div>
+      <h1>The Dan Marco Method</h1>
+      <p class="hero-sub">7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses. <strong>Now in plain language.</strong></p>
+      <div class="price-row">
+        <span class="price-was">$47</span>
+        <span class="price-now">$9</span>
+      </div>
+      <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta">Get The Method — $9</a>
+      <p class="cta-note">Instant PDF. 10 pages. Yours forever.</p>
+    </div>
+  </section>
+
+  <!-- PROBLEM — why this matters -->
+  <section class="problem">
+    <div class="wrap">
+      <h2>You were never taught<br>how money actually works.</h2>
+      <p>School taught you to get a job. Your parents taught you to save. Neither taught you why the gap between effort and result keeps growing.</p>
+      <p><strong>That gap is not bad luck. It is a missing framework.</strong></p>
+      <p>For 3,000 years, one community survived every collapse, every war, every exile — and rebuilt each time. Not through connections or conspiracy. Through <em>a system</em> — passed from parent to child, generation after generation, across continents and centuries.</p>
+      <p>The Dan Marco Method extracts the 7 core financial principles from that system — sourced directly from the Talmud, Maimonides, and real rabbinic scholarship — and puts them in language anyone can use.</p>
+      <p><strong>No motivational fluff. No generic advice. Real principles, real sources, real application.</strong></p>
+    </div>
+  </section>
+
+  <!-- MECHANISM — what's inside -->
+  <section class="mechanism">
+    <div class="wrap">
+      <h2>What's Inside</h2>
+      <p class="sub">7 principles. 10 pages. Read in 20 minutes.</p>
+
+      <ul class="principle-list">
+        <li><span class="num">01</span> <strong>The Three-Part Rule</strong> — the Talmudic asset allocation framework the Nobel Prize rediscovered in 1952</li>
+        <li><span class="num">02</span> <strong>Tzedakah Is Justice, Not Charity</strong> — why the mistranslation costs people a fortune</li>
+        <li><span class="num">03</span> <strong>Build Before You Protect</strong> — what Israeli culture gets right that Western caution gets wrong</li>
+        <li><span class="num">04</span> <strong>Land Does Not Burn</strong> — the lesson one family brought from Europe in 1939</li>
+        <li><span class="num">05</span> <strong>The Shabbat Principle</strong> — deliberate rest as a performance protocol, not a limitation</li>
+        <li><span class="num">06</span> <strong>The Negotiation Framework</strong> — what the Talmud says about knowing your worth before you open your mouth</li>
+        <li><span class="num">07</span> <strong>Generational Wealth Transfer</strong> — how to build wealth your grandchildren still inherit</li>
+      </ul>
+
+      <p class="mechanism-note">Each principle includes its original source and a practical application for today.</p>
+
+      <div style="margin-top: 36px; text-align: center;">
+        <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta cta-block">Get The Method — $9</a>
+        <p class="cta-note">30-day money-back guarantee. No questions asked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="quote-section">
+    <div class="wrap">
+      <blockquote>"For 3,000 years, one community survived every war, every collapse, every exile — and always rebuilt. This is not luck. This is a system."</blockquote>
+      <cite>— Rabbi Dan Marco</cite>
+    </div>
+  </section>
+
+  <!-- CLOSE -->
+  <section class="close-section">
+    <div class="wrap">
+      <h2>A Year From Now</h2>
+      <p class="nudge">You either started — or you didn't.<br>This is $9. Less than lunch.</p>
+      <p class="nudge-em">Your children inherit your wealth or your habits.</p>
+
+      <div class="price-row">
+        <span class="price-was">$47</span>
+        <span class="price-now">$9</span>
+      </div>
+
+      <a href="https://rabbidanmarco.gumroad.com/l/method" class="cta cta-block">Get The Method — $9</a>
+      <p class="cta-note">Instant PDF. Yours forever. 30-day refund.</p>
+
+      <div class="trust-row">
+        <div class="trust-item"><span>&#x1F512;</span>Secure Checkout</div>
+        <div class="trust-item"><span>&#x26A1;</span>Instant Access</div>
+        <div class="trust-item"><span>&#x2714;</span>Yours Forever</div>
+        <div class="trust-item"><span>&#x21A9;</span>30-Day Refund</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="wrap">
+      <h3>Questions</h3>
+      <div class="faq-item">
+        <p class="faq-q">Is this real Jewish wisdom?</p>
+        <p class="faq-a">Yes. Every principle is sourced from real Talmudic tractates, Maimonides, and established rabbinic scholarship. Specific sources are cited throughout.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">Is this financial advice?</p>
+        <p class="faq-a">No. This is educational content about traditional financial frameworks. Not investment tips, not stock picks. Principles that have worked for 3,000 years.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">What do I get?</p>
+        <p class="faq-a">A 10-page PDF delivered instantly. Read it in 20 minutes. Keep it forever. Works on any device.</p>
+      </div>
+      <div class="faq-item">
+        <p class="faq-q">What if it's not for me?</p>
+        <p class="faq-a">Full refund within 30 days. No questions asked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <p>All content is for educational and inspirational purposes only. Not financial, legal, or professional advice.</p>
+      <p>30-day money-back guarantee. &nbsp;|&nbsp; <a href="mailto:info@rabbidanmarco.com">Contact</a></p>
+      <p>© 2026 Rabbi Dan Marco</p>
+    </div>
+  </footer>
+
+  <!-- STICKY BOTTOM -->
+  <div class="sticky" id="sticky">
+    <div class="s-price"><span style="text-decoration:line-through;opacity:0.4;">$47</span> <strong>$9</strong></div>
+    <a href="https://rabbidanmarco.gumroad.com/l/method" class="s-btn">Get The Method — $9</a>
+  </div>
+
+  <script>
+    const s = document.getElementById('sticky');
+    let t = false;
+    window.addEventListener('scroll', () => {
+      if (!t) {
+        requestAnimationFrame(() => {
+          s.classList.toggle('show', scrollY > 600);
+          t = false;
+        });
+        t = true;
+      }
+    });
+  </script>
+
+</body>
+</html>
