@@ -290,81 +290,79 @@
       return (
         <div style={{ background: "#0F0D0B", color: "#F0EBE3", fontFamily: "'Inter',-apple-system,sans-serif", lineHeight: 1.6, WebkitFontSmoothing: "antialiased", minHeight: "100vh", overflow: "hidden" }}>
 
-          {/* ═══════════ HERO — FULL VIEWPORT ═══════════ */}
-          <div style={{
-            position: "relative", width: "100%", minHeight: "100vh",
-            display: "flex", alignItems: "flex-end", overflow: "hidden",
-          }}>
+          {/* ═══════════ HERO ═══════════ */}
+          <div style={{ position: "relative", overflow: "hidden" }}>
             <Particles count={25} />
 
-            {/* Background image — fills viewport */}
+            {/* Image section — face fully visible */}
             <div style={{
-              position: "absolute", inset: 0,
-              transform: mob ? "none" : `translateY(${scrollY * 0.15}px)`,
-            }}>
-              <img src="me.jpg" alt="Rabbi Dan Marco"
-                style={{
-                  display: "block", width: "100%", height: "100%",
-                  objectFit: "cover", objectPosition: mob ? "center 10%" : "center 15%",
-                }}
-              />
-            </div>
-
-            {/* STRONG gradient overlay for text readability */}
-            <div style={{
-              position: "absolute", inset: 0,
-              background: mob
-                ? `linear-gradient(to bottom,
-                    rgba(15,13,11,0) 0%,
-                    rgba(15,13,11,0) 35%,
-                    rgba(15,13,11,0.3) 50%,
-                    rgba(15,13,11,0.7) 60%,
-                    rgba(15,13,11,0.95) 72%,
-                    rgba(15,13,11,1) 85%
-                  )`
-                : `linear-gradient(to bottom,
-                    rgba(15,13,11,0) 0%,
-                    rgba(15,13,11,0) 40%,
-                    rgba(15,13,11,0.25) 52%,
-                    rgba(15,13,11,0.65) 64%,
-                    rgba(15,13,11,0.92) 76%,
-                    rgba(15,13,11,1) 88%
-                  )`,
-              zIndex: 1,
-            }} />
-
-            {/* Vignette edges */}
-            <div style={{
-              position: "absolute", inset: 0, zIndex: 1,
-              boxShadow: "inset 0 0 150px rgba(15,13,11,0.5)",
-              pointerEvents: "none",
-            }} />
-
-            {/* Hero content — bottom of viewport */}
-            <div style={{
-              position: "relative", zIndex: 2, width: "100%",
-              padding: mob ? "0 20px 32px" : "0 48px 64px",
-              maxWidth: mob ? 540 : 700, margin: "0 auto",
-              textAlign: "center",
+              position: "relative", width: "100%",
+              height: mob ? "55vh" : "62vh",
+              overflow: "hidden",
             }}>
               <div style={{
-                display: "inline-block", fontSize: 12, letterSpacing: 3, textTransform: "uppercase",
-                color: "#E8A86D", fontWeight: 600, marginBottom: mob ? 14 : 20,
-                padding: "8px 20px", borderRadius: 100,
-                background: "rgba(15,13,11,0.6)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                border: "1px solid rgba(200,121,65,0.2)",
-                textShadow: "0 1px 4px rgba(0,0,0,0.5)",
-                animation: "fadeIn 0.8s ease-out both",
+                position: "absolute", inset: 0,
+                transform: mob ? "none" : `translateY(${scrollY * 0.12}px)`,
               }}>
-                Rabbi Dan Marco · Alpindorf, Austria
+                <img src="me.jpg" alt="Rabbi Dan Marco"
+                  style={{
+                    display: "block", width: "100%", height: mob ? "130%" : "120%",
+                    objectFit: "cover", objectPosition: mob ? "center 10%" : "center 12%",
+                  }}
+                />
               </div>
 
+              {/* Soft gradient fade at bottom of image into dark bg */}
+              <div style={{
+                position: "absolute", bottom: 0, left: 0, right: 0, height: "45%",
+                background: `linear-gradient(to bottom,
+                  rgba(15,13,11,0) 0%,
+                  rgba(15,13,11,0.4) 40%,
+                  rgba(15,13,11,0.85) 70%,
+                  rgba(15,13,11,1) 100%
+                )`,
+                zIndex: 1,
+              }} />
+
+              {/* Vignette */}
+              <div style={{
+                position: "absolute", inset: 0, zIndex: 1,
+                boxShadow: "inset 0 0 120px rgba(15,13,11,0.4)",
+                pointerEvents: "none",
+              }} />
+
+              {/* Badge over the image — top area */}
+              <div style={{
+                position: "absolute", top: mob ? 20 : 32, left: 0, right: 0,
+                textAlign: "center", zIndex: 2,
+              }}>
+                <div style={{
+                  display: "inline-block", fontSize: 11, letterSpacing: 3, textTransform: "uppercase",
+                  color: "#E8A86D", fontWeight: 600,
+                  padding: "8px 20px", borderRadius: 100,
+                  background: "rgba(15,13,11,0.5)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                  border: "1px solid rgba(200,121,65,0.18)",
+                  textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+                  animation: "fadeIn 0.8s ease-out both",
+                }}>
+                  Rabbi Dan Marco · Alpindorf, Austria
+                </div>
+              </div>
+            </div>
+
+            {/* Text content — below the image, on solid dark bg */}
+            <div style={{
+              position: "relative", zIndex: 2,
+              padding: mob ? "0 20px 36px" : "0 48px 56px",
+              maxWidth: mob ? 540 : 700, margin: "0 auto",
+              textAlign: "center",
+              marginTop: mob ? -20 : -10,
+            }}>
               <h1 style={{
                 fontFamily: serif, fontWeight: 700,
                 fontSize: mob ? "clamp(36px, 10vw, 48px)" : "clamp(48px, 5vw, 68px)",
                 lineHeight: 1.0, marginBottom: mob ? 14 : 20,
                 color: "#FAF9F7",
-                textShadow: "0 2px 40px rgba(0,0,0,0.5)",
                 animation: "fadeIn 0.8s 0.15s ease-out both",
               }}>
                 <span style={{ background: "linear-gradient(135deg, #FAF9F7 30%, #E8A86D 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -376,7 +374,6 @@
                 fontSize: mob ? 15 : 18, color: "#BDB5AA", lineHeight: 1.55,
                 maxWidth: 500, margin: "0 auto",
                 marginBottom: mob ? 20 : 28,
-                textShadow: "0 1px 16px rgba(0,0,0,0.6)",
                 animation: "fadeIn 0.8s 0.3s ease-out both",
               }}>
                 7 Ashkenazi financial principles that survived 3,000 years of wars, exiles, and economic collapses.{" "}
